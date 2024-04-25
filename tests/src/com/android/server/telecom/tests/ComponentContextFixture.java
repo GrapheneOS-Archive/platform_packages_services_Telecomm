@@ -692,6 +692,14 @@ public class ComponentContextFixture implements TestFixture<Context> {
         mServiceInfoByComponentName.put(componentName, serviceInfo);
     }
 
+    public void removeConnectionService(
+            ComponentName componentName,
+            IConnectionService service)
+            throws Exception {
+        removeService(ConnectionService.SERVICE_INTERFACE, componentName, service);
+        mServiceInfoByComponentName.remove(componentName);
+    }
+
     public void addInCallService(
             ComponentName componentName,
             IInCallService service,
@@ -775,6 +783,12 @@ public class ComponentContextFixture implements TestFixture<Context> {
         mComponentNamesByAction.put(action, name);
         mServiceByComponentName.put(name, service);
         mComponentNameByService.put(service, name);
+    }
+
+    private void removeService(String action, ComponentName name, IInterface service) {
+        mComponentNamesByAction.remove(action, name);
+        mServiceByComponentName.remove(name);
+        mComponentNameByService.remove(service);
     }
 
     private List<ResolveInfo> doQueryIntentServices(Intent intent, int flags) {

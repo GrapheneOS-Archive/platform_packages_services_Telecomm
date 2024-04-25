@@ -993,6 +993,7 @@ public class BasicCallTests extends TelecomSystemTest {
         call.setTargetPhoneAccount(mPhoneAccountA1.getAccountHandle());
         assert(call.isVideoCallingSupportedByPhoneAccount());
         assertEquals(VideoProfile.STATE_BIDIRECTIONAL, call.getVideoState());
+        call.setIsCreateConnectionComplete(true);
     }
 
     /**
@@ -1016,6 +1017,7 @@ public class BasicCallTests extends TelecomSystemTest {
         call.setTargetPhoneAccount(mPhoneAccountA2.getAccountHandle());
         assert(!call.isVideoCallingSupportedByPhoneAccount());
         assertEquals(VideoProfile.STATE_AUDIO_ONLY, call.getVideoState());
+        call.setIsCreateConnectionComplete(true);
     }
 
     /**

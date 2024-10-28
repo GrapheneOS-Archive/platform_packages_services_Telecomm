@@ -44,6 +44,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static java.lang.Thread.sleep;
 
 import static java.lang.Thread.sleep;
 
@@ -57,6 +58,7 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.OutcomeReceiver;
 import android.os.Process;
@@ -104,6 +106,7 @@ import com.android.server.telecom.ClockProxy;
 import com.android.server.telecom.ConnectionServiceFocusManager;
 import com.android.server.telecom.ConnectionServiceFocusManager.ConnectionServiceFocusManagerFactory;
 import com.android.server.telecom.ConnectionServiceWrapper;
+import com.android.server.telecom.CreateConnectionResponse;
 import com.android.server.telecom.DefaultDialerCache;
 import com.android.server.telecom.EmergencyCallDiagnosticLogger;
 import com.android.server.telecom.EmergencyCallHelper;
@@ -3772,5 +3775,20 @@ public class CallsManagerTest extends TelecomTestCase {
         TelephonyManager mockTelephonyManager = mComponentContextFixture.getTelephonyManager();
         when(mockTelephonyManager.getPhoneCapability()).thenReturn(mPhoneCapability);
         when(mPhoneCapability.getMaxActiveVoiceSubscriptions()).thenReturn(num);
+    }
+
+    private void waitUntilConditionIsTrueOrTimeout(Condition condition, long timeout,
+            String description) throws InterruptedException {
+        final long start = System.currentTimeMillis();
+        while (!condition.expected().equals(condition.actual())
+                && System.currentTimeMillis() - start < timeout) {
+            sleep(50);
+        }
+        assertEquals(description, condition.expected(), condition.actual());
+    }
+
+    protected interface Condition {
+        Object expected();
+        Object actual();
     }
 }
